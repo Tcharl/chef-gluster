@@ -35,12 +35,12 @@ property :value, [String, Integer, TrueClass, FalseClass],
 default_action :set
 
 load_current_value do
-  cmd = shell_out('gluster', 'volume', 'get', new_resource.volume, new_resource.key)
+  cmd = shell_out('gluster', 'volume', 'get', volume, key)
 
   case cmd.exitstatus
   when 0
-    new_resource.value cmd.stdout.chomp.lines.last.split(nil, 2).last.rstrip
-    new_resource.value nil if new_resource.value == '(null)'
+    value cmd.stdout.chomp.lines.last.split(nil, 2).last.rstrip
+    value nil if new_resource.value == '(null)'
   when 2
     current_value_does_not_exist!
   else
