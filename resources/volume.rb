@@ -25,7 +25,7 @@ property :started, [TrueClass, FalseClass]
 default_action :nothing
 
 load_current_value do
-  cmd = shell_out('gluster', 'volume', 'info', volume_name)
+  cmd = shell_out('gluster', 'volume', 'info', new_resource.volume_name)
 
   if cmd.error?
     current_value_does_not_exist!
