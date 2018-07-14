@@ -41,14 +41,14 @@ end
 
 action :add do
   converge_if_changed do
-    shell_out!(node['gluster']['mountbroker']['command'], 'add', volume, user)
+    shell_out!(node['gluster']['mountbroker']['command'], 'add', new_resource.volume, new_resource.user)
   end
 end
 
 action :remove do
   unless current_resource.nil? # ~FC023
     converge_by ['remove the user/volume pair'] do
-      shell_out!(node['gluster']['mountbroker']['command'], 'remove', '--volume', volume, '--user', user)
+      shell_out!(node['gluster']['mountbroker']['command'], 'remove', '--volume', new_resource.volume, '--user', new_resource.user)
     end
   end
 end
