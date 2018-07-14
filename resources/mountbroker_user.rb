@@ -32,9 +32,9 @@ default_action :add
 
 load_current_value do
   json = Chef::JSONCompat.parse shell_out!(node['gluster']['mountbroker']['command'], 'node-status').stdout
-  volumes = json['output']['users'][new_resource.user]
+  volumes = json['output']['users'][user]
 
-  unless volumes.is_a?(Array) && volumes.include?(new_resource.volume)
+  unless volumes.is_a?(Array) && volumes.include?(volume)
     current_value_does_not_exist!
   end
 end
