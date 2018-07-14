@@ -35,7 +35,7 @@ property :value, [String, Integer, TrueClass, FalseClass],
 default_action :set
 
 load_current_value do
-  cmd = shell_out('gluster', 'volume', 'get', volume, key)
+  cmd = shell_out('gluster', 'volume', 'get', new_resource.volume, new_resource.key)
 
   case cmd.exitstatus
   when 0
