@@ -35,12 +35,12 @@ property :value, [String, Integer, TrueClass, FalseClass],
 default_action :set
 
 load_current_value do
-  cmd = shell_out('gluster', 'volume', 'get', volume, key)
+  cmd = shell_out('gluster', 'volume', 'get', new_resource.volume, new_resource.key)
 
   case cmd.exitstatus
   when 0
-    value cmd.stdout.chomp.lines.last.split(nil, 2).last.rstrip
-    value nil if value == '(null)'
+    new_resource.value cmd.stdout.chomp.lines.last.split(nil, 2).last.rstrip
+    new_resource.value nil if new_resource.value == '(null)'
   when 2
     current_value_does_not_exist!
   else
@@ -50,19 +50,19 @@ end
 
 action :set do
   converge_if_changed do
-    shell_out!('gluster', 'volume', 'set', volume, key, value)
+    shell_out!('gluster', 'volume', 'set', new_resource.volume, new_resource.key, new_resource.value)
   end
 end
 
 action :reset do
   if current_resource # ~FC023
     converge_by ['reset value to default'] do
-      shell_out!('gluster', 'volume', 'reset', volume, key)
+      shell_out!('gluster', 'volume', 'reset', new_resource.volume, new_resource.key)
     end
   end
 end
 
-def value_string(v = value)
+def value_string(v = new_resource.value)
   case v
   when NilClass
     nil
