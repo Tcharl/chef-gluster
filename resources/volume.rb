@@ -25,27 +25,27 @@ property :started, [TrueClass, FalseClass]
 default_action :nothing
 
 load_current_value do
-  cmd = shell_out('gluster', 'volume', 'info', volume_name)
+  cmd = shell_out('gluster', 'volume', 'info', new_resource.volume_name)
 
   if cmd.error?
     current_value_does_not_exist!
   else
-    started !(cmd.stdout =~ /^Status: Started$/).nil?
+    new_resource.started !(cmd.stdout =~ /^Status: Started$/).nil?
   end
 end
 
 action :start do
   unless current_resource.started # ~FC023
-    converge_by ["start volume #{volume_name}"] do
-      shell_out!('gluster', 'volume', 'start', volume_name)
+    converge_by ["start volume #{new_resource.volume_name}"] do
+      shell_out!('gluster', 'volume', 'start', new_resource.volume_name)
     end
   end
 end
 
 action :stop do
   if current_resource.started # ~FC023
-    converge_by ["stop volume #{volume_name}"] do
-      shell_out!('gluster', 'volume', 'stop', volume_name, input: "y\n")
+    converge_by ["stop volume #{new_resource.volume_name}"] do
+      shell_out!('gluster', 'volume', 'stop', new_resource.volume_name, input: "y\n")
     end
   end
 end
@@ -53,7 +53,7 @@ end
 action :delete do
   if current_resource # ~FC023
     converge_by ["delete volume #{volume_name}"] do
-      shell_out!('gluster', 'volume', 'delete', volume_name, input: "y\n")
+      shell_out!('gluster', 'volume', 'delete', new_resource.volume_name, input: "y\n")
     end
   end
 end
